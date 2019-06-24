@@ -35,7 +35,7 @@ const createProblems = () =>{
 }
 
 const createNewQuestion = () =>{
-    const {num,choose} = createProblems(2);
+    const {num,choose} = createProblems();
     $question.innerHTML = `<h1 class="text-light l-heading">${num}<span class="text-primary">x</span>${choose} ?</h1>`
     steps++;
     renderScore(steps,maxSteps);
