@@ -11,11 +11,13 @@ const maxSteps = 5;
 let currentAnswer;
 let steps = 0;
 let score = 0;
+let num,choose;
+let operator;
 
 
-$button.addEventListener("submit", (event) => {
+$button.addEventListener("click", (event) => {
     event.preventDefault();
-    if((isInvalidValue())) return
+    // if((isInvalidValue())) return
     verifyAnswer();
     createNewQuestion();
     clearInput();
@@ -29,18 +31,55 @@ window.addEventListener("load" ,() =>{
 const clearInput = () => $answer.value = "";
 
 const createProblems = () =>{
-    const choose = Math.floor(Math.random()*10)
-    const num = Math.floor(Math.random()*9)
-    currentAnswer= choose*num;
-    return { num,choose }
+    operator = returnSomeOperation();
+
+    switch(operator){
+        case "+":
+            num = returnRandomNumber(100);
+            choose = returnRandomNumber(100);
+            currentAnswer= num+choose;
+            break
+            
+        case "-":
+            num = returnRandomNumber(100);
+            choose = returnRandomNumber(100);
+            currentAnswer= num-choose;
+            break
+            
+        case "/":
+            num = returnRandomNumber(9);
+            choose = returnRandomNumber(9);
+            currentAnswer= num/choose;
+            break
+            
+        case "*":
+            num = returnRandomNumber(9);
+            choose = returnRandomNumber(9);
+            currentAnswer= num*choose;
+            break
+            
+    }
+    return {num , choose , operator}
+    
 }
 
 const createNewQuestion = () =>{
-    const {num,choose} = createProblems();
-    $question.innerHTML = `<h1 class="text-light l-heading">${num}<span class="text-primary">x</span>${choose} ?</h1>`
+    const { num ,choose , operator} = createProblems();
+    $question.innerHTML = `<h1 class="text-light l-heading">${num}<span class="text-primary">${operator}</span>${choose} ?</h1>`
     steps++;
     renderScore(steps,maxSteps);
 
+}
+
+const returnRandomNumber = (n) =>{
+    return Math.floor(Math.random()*n)
+}
+
+
+const returnSomeOperation = () =>{
+    const operations = ['+','*','-','/'];
+    const choose = Math.floor(Math.random()*(operations.length-1));
+    return operations[choose];
 }
 
 const isInvalidValue = () =>{
