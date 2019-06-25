@@ -1,6 +1,7 @@
+"use strict";
+
 const $tabuada = document.querySelector("#tabuada");
 const $button = document.querySelector("#tabuada .answer .btn");
-
 const $answer = document.querySelector("#answer");
 const $question = document.querySelector("#question");
 const $steps = document.querySelector("#score h2 span");
@@ -15,13 +16,16 @@ let num,choose;
 let operator;
 
 
-$button.addEventListener("click", (event) => {
-    event.preventDefault();
-    // if((isInvalidValue())) return
+
+$button.addEventListener("click",(event) => {
+
+    if((isInvalidValue())) return
     verifyAnswer();
     createNewQuestion();
     clearInput();
+    console.log(steps);
     if(steps > 5) renderResults();
+
 });
 
 window.addEventListener("load" ,() =>{
@@ -35,14 +39,14 @@ const createProblems = () =>{
 
     switch(operator){
         case "+":
-            num = returnRandomNumber(100);
-            choose = returnRandomNumber(100);
+            num = returnRandomNumber(10);
+            choose = returnRandomNumber(10);
             currentAnswer= num+choose;
             break
             
         case "-":
-            num = returnRandomNumber(100);
-            choose = returnRandomNumber(100);
+            num = returnRandomNumber(10);
+            choose = returnRandomNumber(10);
             currentAnswer= num-choose;
             break
             
@@ -65,7 +69,7 @@ const createProblems = () =>{
 
 const createNewQuestion = () =>{
     const { num ,choose , operator} = createProblems();
-    $question.innerHTML = `<h1 class="text-light l-heading">${num}<span class="text-primary">${operator}</span>${choose} ?</h1>`
+    $question.innerHTML = `<h1 class="text-light l-heading">${num}<span class="text-primary">${operator === "*"?"x":operator}</span>${choose} ?</h1>`
     steps++;
     renderScore(steps,maxSteps);
 
@@ -74,6 +78,8 @@ const createNewQuestion = () =>{
 const returnRandomNumber = (n) =>{
     return Math.floor(Math.random()*n)
 }
+
+
 
 
 const returnSomeOperation = () =>{
@@ -91,6 +97,18 @@ const isInvalidValue = () =>{
 
 const renderResults = () =>{
     const $replay = document.querySelector("#btn-replay button");
+
+    if(isAllTheQuestionsRight()){ // this block of code will run if the users hit all the questions
+         $tabuada.innerHTML = `<h2 class="text-light l-heading">Parabéns você acertou todas as questões!</h2>`
+         $replay.style.display = "block";
+         addReplayListener($replay);
+
+         return
+        
+    }
+
+    // this block of coode bellow will run if exists some error of the user
+
     $replay.style.display = "block";
     $tabuada.innerHTML = `<p class="errors text-light">Você acertou ${score} das ${maxSteps} Questoes</p>`
 
@@ -101,12 +119,14 @@ const renderResults = () =>{
         $tabuada.innerHTML += `<p class="text-primary results">${props} errado: <span class="wrong-as">${wrongAnswer}</span> correto: <span class="right-as">${rightAnswer}</span></p>`
     }
 
-    $replay.addEventListener("click" , () => location.reload()) // this is going to reload the page
+    addReplayListener($replay);
 }
 
 const renderScore = (currentStep,maxSteps) =>{
     $steps.innerHTML = `(${currentStep}/${maxSteps})`
 }
+
+const addReplayListener = (element) => element.addEventListener("click" , () => location.reload()) 
 
 
 const verifyAnswer = () =>{
@@ -119,6 +139,10 @@ const verifyAnswer = () =>{
     }
     
 }
+
+
+
+const isAllTheQuestionsRight = () => Object.entries(wrongAnswers).length === 0;
 
 
 
