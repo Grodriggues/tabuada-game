@@ -13,7 +13,8 @@ let steps = 0;
 let score = 0;
 
 
-$button.addEventListener("click", (event) => {
+$button.addEventListener("submit", (event) => {
+    event.preventDefault();
     if((isInvalidValue())) return
     verifyAnswer();
     createNewQuestion();
